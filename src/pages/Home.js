@@ -1,103 +1,50 @@
 import { useEffect, useState } from "react";
-import { getProducts } from "../api/fakeStore";
+import { getProducts as getFakeProducts } from "../api/fakeStore";
 import ProductCard from "../components/ProductCard";
 
 function Home() {
   const [products, setProducts] = useState([]);
-  const [filtered, setFiltered] = useState([]);
-
-  const [search, setSearch] = useState("");
-  const [minPrice, setMinPrice] = useState("");
-  const [maxPrice, setMaxPrice] = useState("");
 
   useEffect(() => {
-    getProducts().then((data) => {
-      // remove admin-deleted products
-      const deleted = JSON.parse(localStorage.getItem("deletedProducts")) || [];
-      const visibleProducts = data.filter(
-        (p) => !deleted.includes(p.id)
-      );
+    const loadProducts = async () => {
+      // 1️⃣ Get FakeStore products
+      const fakeProducts = await getFakeProducts();
 
-      setProducts(visibleProducts);
-      setFiltered(visibleProducts);
-    });
+      // 2️⃣ Get Admin-added products from localStorage
+      const adminProducts =
+        JSON.parse(localStorage.getItem("products")) || [];
+
+      // 3️⃣ Merge both
+      const mergedProducts = [...adminProducts, ...fakeProducts];
+
+      setProducts(mergedProducts);
+    };
+
+    loadProducts();
   }, []);
 
-  useEffect(() => {
-    let temp = [...products];
-
-    // 🔍 SEARCH FILTER
-    if (search) {
-      temp = temp.filter((p) =>
-        p.title.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-
-    // 💰 PRICE FILTER
-    if (minPrice) {
-      temp = temp.filter((p) => p.price >= Number(minPrice));
-    }
-
-    if (maxPrice) {
-      temp = temp.filter((p) => p.price <= Number(maxPrice));
-    }
-
-    setFiltered(temp);
-  }, [search, minPrice, maxPrice, products]);
-
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Products</h2>
+    <div style={{ padding: "40px" }}>
+      <h2 style={{ marginBottom: "20px" }}>All Products</h2>
 
-      {/* 🔍 FILTER BAR */}
-      <div
-        style={{
-          display: "flex",
-          gap: "15px",
-          marginBottom: "20px",
-          flexWrap: "wrap",
-        }}
-      >
-        <input
-          type="text"
-          placeholder="Search product..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-
-        <input
-          type="number"
-          placeholder="Min price"
-          value={minPrice}
-          onChange={(e) => setMinPrice(e.target.value)}
-        />
-
-        <input
-          type="number"
-          placeholder="Max price"
-          value={maxPrice}
-          onChange={(e) => setMaxPrice(e.target.value)}
-        />
-      </div>
-
-      {/* PRODUCT GRID */}
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
-          gap: "20px",
-        }}
-      >
-        {filtered.length === 0 ? (
-          <p>No products found</p>
-        ) : (
-          filtered.map((p) => (
-            <ProductCard key={p.id} product={p} />
-          ))
-        )}
-      </div>
+      {products.length === 0 ? (
+        <p>No products available</p>
+      ) : (
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+            gap: "20px",
+          }}
+        >
+          {products.map((product) => (
+            <ProductCard key={product.id} product={product} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
 
 export default Home;
+

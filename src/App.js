@@ -8,38 +8,64 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
+import AddProduct from "./pages/AddProduct";
+import Products from "./pages/Products";
 import { useAuthStore } from "./store/authStore";
+
+/* ---------------- ADMIN PROTECTED ROUTE ---------------- */
 function AdminRoute({ children }) {
   const user = useAuthStore((state) => state.user);
 
-  // allow only admin
   return user?.role === "admin" ? children : <AdminLogin />;
 }
+
+/* ---------------- APP ---------------- */
 function App() {
   return (
     <BrowserRouter>
       <Navbar />
 
-      {/* CONTENT WRAPPER (IMPORTANT) */}
       <div style={{ marginTop: "20px", position: "relative", zIndex: 1 }}>
         <Routes>
+          {/* PUBLIC ROUTES */}
           <Route path="/" element={<Home />} />
           <Route path="/product/:id" element={<ProductDetails />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/checkout" element={<Checkout />} />
-        <Route path="/login" element={<Login />} />
-<Route path="/register" element={<Register />} />
-<Route path="/admin-login" element={<AdminLogin />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
 
-<Route
-  path="/admin"
-  element={
-    <AdminRoute>
-      <AdminDashboard />
-    </AdminRoute>
-  }
-/>
+          {/* ADMIN AUTH */}
+          <Route path="/admin-login" element={<AdminLogin />} />
 
+          {/* ADMIN DASHBOARD */}
+          <Route
+            path="/admin"
+            element={
+              <AdminRoute>
+                <AdminDashboard />
+              </AdminRoute>
+            }
+          />
+
+          {/* ADMIN PRODUCT MANAGEMENT */}
+          <Route
+            path="/admin/products"
+            element={
+              <AdminRoute>
+                <Products />
+              </AdminRoute>
+            }
+          />
+
+          <Route
+            path="/admin/add-product"
+            element={
+              <AdminRoute>
+                <AddProduct />
+              </AdminRoute>
+            }
+          />
         </Routes>
       </div>
     </BrowserRouter>

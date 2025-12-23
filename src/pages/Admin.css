@@ -1,51 +1,74 @@
+/* ===== Admin Page Container ===== */
 .admin-container {
-  min-height: 100vh;
-  background: #111827;
-  color: #e5e7eb;
-  padding: 40px;
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #0f172a; /* dark navy */
+  color: #f8fafc;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
 }
 
-.admin-card {
-  background: #1f2933;
-  padding: 30px;
-  border-radius: 10px;
-  max-width: 350px;
-  margin: auto;
+/* ===== Page Title ===== */
+.admin-container h2 {
+  text-align: center;
+  margin-bottom: 30px;
+  font-size: 28px;
+  color: #38bdf8; /* sky blue */
 }
 
-.admin-card input {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-}
-
-.admin-card button {
-  width: 100%;
-  padding: 10px;
-}
-
+/* ===== Product Card ===== */
 .admin-product {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 20px;
-  background: #1f2933;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 10px;
+  background-color: #020617; /* darker contrast */
+  padding: 16px 20px;
+  margin-bottom: 16px;
+  border-radius: 10px;
+  border-left: 5px solid #38bdf8;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.admin-product img {
-  width: 80px;
-  height: 80px;
-  object-fit: contain;
-  background: white;
+.admin-product:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(56, 189, 248, 0.3);
 }
 
+/* ===== Product Info ===== */
+.admin-product h4 {
+  margin: 0;
+  font-size: 18px;
+  color: #f1f5f9;
+}
+
+.admin-product p {
+  margin: 4px 0 0;
+  font-size: 15px;
+  color: #cbd5f5;
+}
+
+/* ===== Delete Button ===== */
 .admin-product button {
-  margin-left: auto;
-  background: #dc2626;
-  border: none;
+  background-color: #ef4444;
   color: white;
-  padding: 8px 12px;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
   cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.admin-product button:hover {
+  background-color: #dc2626;
+  transform: scale(1.05);
+}
+
+/* ===== Empty State ===== */
+.admin-empty {
+  text-align: center;
+  padding: 40px;
+  color: #94a3b8;
+  font-size: 16px;
 }
